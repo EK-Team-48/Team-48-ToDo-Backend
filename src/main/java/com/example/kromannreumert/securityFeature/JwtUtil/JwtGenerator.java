@@ -1,5 +1,6 @@
 package com.example.kromannreumert.securityFeature.JwtUtil;
 
+import com.example.kromannreumert.securityFeature.entity.Role;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtGenerator {
@@ -24,11 +26,12 @@ public class JwtGenerator {
         this.privateKey = privateKey;
     }
 
-    public String issueToken(String username) throws Exception {
+    public String issueToken(String username, List<String> roles) throws Exception {
         Instant now = Instant.now();
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .subject(username)
+                .claim("roles", roles)
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(now.plusSeconds(3600)))
                 .build();

@@ -2,11 +2,14 @@ package com.example.kromannreumert.securityFeature.service;
 
 import com.example.kromannreumert.securityFeature.entity.User;
 import com.example.kromannreumert.securityFeature.repository.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -21,12 +24,16 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if(user == null) throw new UsernameNotFoundException("User not found");
-        return org.springframework.security.core.userdetails.
-                User.withUsername(user.getUsername())
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<SimpleGrantedAuthority> roleAuthority = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
+                .toList();
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles())
+                .authorities(roleAuthority)
                 .build();
     }
 
@@ -38,6 +45,9 @@ public class UserService implements UserDetailsService {
         } catch (RuntimeException e) {
             throw new RuntimeException("Could not create user");
         }
+    }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

@@ -22,8 +22,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/create")
+                                "/auth/create",
+                                "/status/healthz")
                         .permitAll()
+
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/manager/**").hasRole("MANAGER")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(
                         oauth -> oauth.jwt(jwt -> {}));

@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -40,5 +41,5 @@ public class User {
     private Date createdDate;
 
     @NotNull
-    private String roles;
+    private Set<Role> roles;
 }
