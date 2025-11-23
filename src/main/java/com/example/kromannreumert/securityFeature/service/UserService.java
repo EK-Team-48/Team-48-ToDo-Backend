@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final LoggingService loggingService;
-    private final static Logger log = LoggerFactory.getLogger(AuthorizeController.class);
+    private final static Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, LoggingService loggingService) {
         this.userRepository = userRepository;

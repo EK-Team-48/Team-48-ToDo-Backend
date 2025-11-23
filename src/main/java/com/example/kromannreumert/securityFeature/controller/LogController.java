@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 public class LogController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorizeController.class);
+    private static final Logger log = LoggerFactory.getLogger(LogController.class);
     private final LoggingService loggingService;
 
     public LogController(LoggingService loggingService) {

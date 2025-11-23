@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class LoginService {
 
-    private final static Logger log = LoggerFactory.getLogger(AuthorizeController.class);
+    private final static Logger log = LoggerFactory.getLogger(LoggingService.class);
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtGenerator jwtIssuer;
@@ -32,7 +32,7 @@ public class LoginService {
 
     public JwtResponseDTO login(LoginDTO loginRequest) throws Exception {
         try {
-            
+
             log.info("A user is trying to login {}", loginRequest.username());
             // This is for spring security to handle username and password with bcrypt
             // as it does not retrieve roles from the DB, we have to do it manually
@@ -64,7 +64,7 @@ public class LoginService {
 
             log.error("User could not log in {}", loginRequest.username());
             loggingService.log(LogAction.LOGIN_FAILED, loginRequest.username(),"User failed to login");
-            throw new RuntimeException(e);
+            throw new RuntimeException("Login failed for user " + loginRequest.username(), e);
 
         }
     }

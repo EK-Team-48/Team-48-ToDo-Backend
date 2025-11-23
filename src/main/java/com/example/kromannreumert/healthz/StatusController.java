@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 public class StatusController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorizeController.class);
+    private static final Logger log = LoggerFactory.getLogger(StatusController.class);
 
     @GetMapping("/status/healthz")
     public Map<String, String> healthzStatus() {

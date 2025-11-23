@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class LoggingService {
 
-    private final static Logger log = LoggerFactory.getLogger(AuthorizeController.class);
+    private final static Logger log = LoggerFactory.getLogger(LoggingService.class);
     private final LogRepository logRepository;
 
     public LoggingService(LogRepository logRepository) {
