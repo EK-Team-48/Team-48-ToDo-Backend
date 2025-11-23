@@ -44,18 +44,19 @@ public class LoggingUnitTest {
 
     @Test
     void addLogs() {
+
+        // ARRANGE
         String actor = "Zahaa";
         LogAction action = LogAction.CREATE_TASK;
         String details = "Task created by: " + actor;
 
-        // Gives us the possibility to retrieve the data from the object we store for a void method
+        // ACT
         ArgumentCaptor<Logging> logsObject = ArgumentCaptor.forClass(Logging.class);
-
         loggingService.log(action,actor, details);
-
         verify(logRepository).save(logsObject.capture());
         Logging loggedContext = logsObject.getValue();
 
+        // ASSERT
         assertEquals(actor, loggedContext.getActor());
         assertEquals(action, loggedContext.getAction());
         assertEquals(details, loggedContext.getDetails());
@@ -64,19 +65,22 @@ public class LoggingUnitTest {
 
     @Test
     void getAllLogsByAction() {
+
+        // ARRANGE
         String actor = "Zahaa";
         LogAction createTaskAction = LogAction.CREATE_TASK;
         String createTask = "Task created";
         List<Logging> addData = List.of(new Logging(actor, createTaskAction, createTask));
 
+        // ACT
         when(logRepository.findAllByAction(createTaskAction)).thenReturn(addData);
-
         List<Logging> result = loggingService.getAllLogsByAction(createTaskAction);
 
+        // ASSERT
         assertEquals(1, result.size());
         assertNotNull(result);
-
         assertEquals(LogAction.CREATE_TASK, result.getFirst().getAction());
+        verify(logRepository).findAllByAction(createTaskAction);
 
     }
 
