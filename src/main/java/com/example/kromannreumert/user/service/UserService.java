@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
 
         } catch (RuntimeException e) {
 
-            log.error("Could not create usser");
+            log.error("Could not create user");
             loggingService.log(LogAction.CREATE_USER_FAILED,"TODO ADD AUTH USER","Created new user failed: " + user.getName());
             throw new RuntimeException("Could not create user");
 
