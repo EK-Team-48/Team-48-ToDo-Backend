@@ -34,4 +34,6 @@ public class Casee {
     )
     public Set<User> users;
 
+    public Long IdPrefix;
+
 }

@@ -13,6 +13,9 @@ import java.util.List;
 public class ClientService {
 
 
+    //TODO add method to make it possible to add users to the Client
+
+
     private final ClientRepository clientRepository;
 
     public ClientService(ClientRepository clientRepository) {
@@ -44,12 +47,14 @@ public class ClientService {
     }
 
 
+    // Single responsibility -> that is why I do not combine it with the method below
     public Client updateClientName(UpdateClientNameDTO updateClient, String clientName) {
         Client updatedClient = clientRepository.findClientByName(clientName).orElseThrow(() -> new RuntimeException("Client not found"));
         updatedClient.setName(updateClient.name());
         return clientRepository.save(updatedClient);
     }
 
+    // Single responsibility -> that is why I do not combine it with the method below
     public Client updateClientIdPrefix(String clientName, UpdateClientIdPrefixDTO updateClientIdPrefixDTO) {
         Client updatedClientId = clientRepository.findClientByName(clientName).orElseThrow(() -> new RuntimeException("Client not found"));
         updatedClientId.setIDPrefix(updateClientIdPrefixDTO.idPrefix());
