@@ -49,8 +49,8 @@ public class AuthorizeController {
     public ResponseEntity<?> createAccount(@RequestBody User user) {
         try {
             log.info("User created controller accessed by {}", user.getName());
-            userService.createUser(user);
-            return ResponseEntity.ok("User created: " + user.getName());
+            String test = userService.createUser(user);
+            return ResponseEntity.ok(test);
         } catch (RuntimeException e) {
             log.error("Could not create user {}", user.getName());
             return new ResponseEntity<>("Could not create user",HttpStatus.BAD_REQUEST);
