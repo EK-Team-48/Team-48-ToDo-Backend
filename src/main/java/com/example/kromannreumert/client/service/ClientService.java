@@ -1,15 +1,11 @@
 package com.example.kromannreumert.client.service;
 
-import com.example.kromannreumert.client.DTO.ClientResponeDTO;
-import com.example.kromannreumert.client.DTO.ClientRequestDTO;
-import com.example.kromannreumert.client.DTO.UpdateClientIdPrefixDTO;
-import com.example.kromannreumert.client.DTO.UpdateClientNameDTO;
+import com.example.kromannreumert.client.DTO.*;
 import com.example.kromannreumert.client.entity.Client;
 import com.example.kromannreumert.client.mapper.ClientMapper;
 import com.example.kromannreumert.client.repository.ClientRepository;
 import com.example.kromannreumert.user.entity.User;
 import com.example.kromannreumert.user.repository.UserRepository;
-import com.example.kromannreumert.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -87,9 +83,24 @@ public class ClientService {
         return "Successfully updated client with: " + updateClient.idPrefix();
     }
 
+    public String updateClientUserList(UpdateClientUserList userList) {
+        Client updateClientUsers = clientRepository.getClientByIDPrefix(userList.clientIdPrefix()).orElseThrow(() -> new RuntimeException("Client not found"));
+        Set<User> users = userList.user().stream().map(u -> userRepository.findByUsername(u).orElseThrow(() -> new RuntimeException("User not found"))).collect(Collectors.toSet());
+        updateClientUsers.setUsers(users);
+        clientRepository.save(updateClientUsers);
+        return "Successfully updated users with: " + userList.user();
+    }
+
     public String deleteClient(Long id) {
         clientRepository.deleteById(id);
         return "Client with id: " + id + " has been deleted";
+    }
+
+    //TODO need to convert this to return only the users name and not more
+    public List<User> getUserFromClient(Long idPrefix) {
+        Client getClient = clientRepository.getClientByIDPrefix(idPrefix).orElseThrow(() -> new RuntimeException("Client not found"));
+        return getClient.users.stream().toList();
+
     }
 
 }
