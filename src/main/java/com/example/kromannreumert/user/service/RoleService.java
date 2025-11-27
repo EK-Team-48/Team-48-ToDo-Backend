@@ -1,5 +1,8 @@
 package com.example.kromannreumert.user.service;
 
+import com.example.kromannreumert.logging.entity.LogAction;
+import com.example.kromannreumert.logging.entity.Logging;
+import com.example.kromannreumert.logging.service.LoggingService;
 import com.example.kromannreumert.user.dto.RoleRequestDTO;
 import com.example.kromannreumert.user.dto.RoleResponseDTO;
 import com.example.kromannreumert.user.entity.Role;
@@ -16,60 +19,98 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
+    private final LoggingService loggingService;
 
 
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper) {
+    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, LoggingService loggingService) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
+        this.loggingService = loggingService;
     }
 
-    public List<RoleResponseDTO>getAllRoles(){
-        List<Role>roles = roleRepository.findAll();
+    public List<RoleResponseDTO>getAllRoles(String name) {
+        try {
+            List<Role> roles = roleRepository.findAll();
 
-        List<RoleResponseDTO>dtoList = roles.stream()
-                .map(roleMapper::toRoleResponseDTO)
-                .toList();
+            List<RoleResponseDTO> dtoList = roles.stream()
+                    .map(roleMapper::toRoleResponseDTO)
+                    .toList();
 
-        return dtoList;
+            loggingService.log(LogAction.VIEW_ALL_ROLES, name, "Viewed all roles");
+
+            return dtoList;
+        } catch (RuntimeException e) {
+
+            loggingService.log(LogAction.VIEW_ALL_ROLES_FAILED, name, "Failed to view all roles");
+
+            throw new RuntimeException("could not view the roles");
+        }
     }
-    public RoleResponseDTO getRolebyRoleId(int roleId){
-        Optional<Role>role = roleRepository.findById(roleId);
+    public RoleResponseDTO getRolebyRoleId(int roleId, String name) {
+        try {
+            Optional<Role> role = roleRepository.findById(roleId);
 
-        List<RoleResponseDTO>dtoList = role.stream()
-                .map(roleMapper :: toRoleResponseDTO)
-                .toList();
+            List<RoleResponseDTO> dtoList = role.stream()
+                    .map(roleMapper::toRoleResponseDTO)
+                    .toList();
 
-        return dtoList.getFirst();
+            loggingService.log(LogAction.VIEW_ONE_ROLE, name, "View one role");
+
+            return dtoList.getFirst();
+        } catch (RuntimeException e) {
+            loggingService.log(LogAction.VIEW_ONE_ROLE_FAILED, name, "Failed to view one role");
+            throw new RuntimeException("could not get role by role id");
+        }
     }
-    public RoleResponseDTO createRole(RoleRequestDTO roleRequestDTO){
-        Role role = new Role(
-                roleRequestDTO.role()
-        );
+    public RoleResponseDTO createRole(RoleRequestDTO roleRequestDTO, String name) {
+        try {
+            Role role = new Role(
+                    roleRequestDTO.role()
+            );
 
-        Role roleFromDb =  roleRepository.save(role);
+            Role roleFromDb = roleRepository.save(role);
 
-        return new RoleResponseDTO(
-                roleFromDb.getId(),
-                roleFromDb.getRoleName()
-        );
+            loggingService.log(LogAction.CREATE_ROLE, name, "Created a role: " + role.getRoleName());
+
+            return new RoleResponseDTO(
+                    roleFromDb.getId(),
+                    roleFromDb.getRoleName()
+            );
+        } catch (RuntimeException e) {
+            loggingService.log(LogAction.CREATE_ROLE_FAILED, name, "Failed to create role: " + roleRequestDTO.role());
+            throw new RuntimeException("Could not create role");
+        }
     }
 
 
-    public RoleResponseDTO updateRole(int roleId, RoleRequestDTO requestDTO){
-        Role role = roleRepository.findById(roleId).get();
+    public RoleResponseDTO updateRole(int roleId, RoleRequestDTO requestDTO, String name) {
+        try {
+            Role role = roleRepository.findById(roleId).get();
 
-        role.setRoleName(requestDTO.role());
+            role.setRoleName(requestDTO.role());
 
-        Role roleFromDb = roleRepository.save(role);
+            Role roleFromDb = roleRepository.save(role);
 
-        return new RoleResponseDTO(
-                roleFromDb.getId(),
-                roleFromDb.getRoleName()
-        );
+            loggingService.log(LogAction.UPDATE_ROLE, name, "Updated role with roleId: " + roleId + ", new role is: " + roleFromDb.getRoleName());
+
+            return new RoleResponseDTO(
+                    roleFromDb.getId(),
+                    roleFromDb.getRoleName()
+            );
+        } catch (RuntimeException e) {
+            loggingService.log(LogAction.UPDATE_ROLE_FAILED, name, "Failed to update role with roleId: " + roleId);
+            throw new RuntimeException("could not update role");
+        }
     }
 
+    //her skal rollen måske arkiveres og ikke slettes?
+    public void deleteRole(int roleId, String name) {
+        try {
+            roleRepository.deleteById(roleId);
 
-    public void deleteRole(int roleId){
-        roleRepository.deleteById(roleId);
+            loggingService.log(LogAction.DELETE_ROLE, name, "Deleted role with role id: " + roleId);
+        } catch (RuntimeException e) {
+            loggingService.log(LogAction.DELETE_ROLE_FAILED, name, "Failed to delete role with role id: " + roleId);
+        }
     }
 }

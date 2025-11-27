@@ -10,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.security.Principal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,13 +29,15 @@ public class LoggingUnitTest {
 
     @Test
     void getAllLogs() {
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
 
         // ARRANGE
         List<Logging> addData = List.of(new Logging("Zahaa", LogAction.CREATE_USER, "user created"));
         when(logRepository.findAll()).thenReturn(addData);
 
         // ACT
-        List<Logging> result = loggingService.getAllLogs();
+        List<Logging> result = loggingService.getAllLogs(principal.getName());
 
         // ASSERT
         assertNotNull(result);
