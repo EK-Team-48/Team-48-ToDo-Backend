@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.Set;
 
@@ -22,18 +23,20 @@ public class Client {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @ManyToMany
     @JoinTable(
             name = "client_assignee",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_id")
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     public Set<User> users;
 
     // 99xxxx nummeret plus id;
     @NotNull
+    @Column(unique = true)
     private Long IDPrefix;
 
 
