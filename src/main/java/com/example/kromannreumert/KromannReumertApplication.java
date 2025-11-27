@@ -36,7 +36,7 @@ public class KromannReumertApplication {
             Role partner  = roleRepository.save(new Role(null, "PARTNER"));
             Role sagsbehandler  = roleRepository.save(new Role(null, "SAGSBEHANDLER"));
             Role jurist  = roleRepository.save(new Role(null, "JURIST"));
-            User user = userRepo.save(new User(null, "bob", "bob", "bob@123.dk", "bob", now, Set.of(admin)));
+            User user = userRepo.save(new User(null, "Jacob", "Jacob", "bob@123.dk", "bob", now, Set.of(admin)));
 
 
             // CREATE User in DB
@@ -45,7 +45,12 @@ public class KromannReumertApplication {
             userRepo.save(new User(null,"testSagsbehandler","test","test@test.dk","test", now,Set.of(sagsbehandler)));
             userRepo.save(new User(null,"testJurist","test","test@test.dk","test", now,Set.of(jurist)));
 
-            clientRepository.save(new Client(null, "hey", Set.of(user), 9999L));
+            clientRepository.save(new Client(null, "Zahaa Enterprise", Set.of(user), 99000L));
+            clientRepository.save(new Client(null, "Hannibal Enterprise", Set.of(user), 99001L));
+            clientRepository.save(new Client(null, "Victor Enterprise", Set.of(user), 99002L));
+            clientRepository.save(new Client(null, "MonneDev Enterprise", Set.of(user), 99003L));
+            clientRepository.save(new Client(null, "Kromann Reumert", Set.of(user), 99004L));
+
 
             System.out.println("Test data indlæst i databasen");
         };
