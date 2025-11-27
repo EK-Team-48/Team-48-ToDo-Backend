@@ -5,6 +5,7 @@ import com.example.kromannreumert.logging.service.LoggingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,11 @@ public class LogController {
     @GetMapping("/getalllogs")
     public List<Logging> getAllLogs(Principal principal) {
         log.info("Controller: Get all logs has been accessed by {}", principal.getName());
-        return loggingService.getAllLogs();
+        return loggingService.getAllLogs(principal.getName());
+    }
+
+    @GetMapping("getlog/{logId}")
+    public Logging getOneLog(@PathVariable int logId, Principal principal){
+        return loggingService.getLogById(logId, principal.getName());
     }
 }
