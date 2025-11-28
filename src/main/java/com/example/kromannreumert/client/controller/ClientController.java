@@ -57,7 +57,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping("/update/id")
+    @PatchMapping("/update/id")
     public ResponseEntity<?> updateClientIdPrefix(@RequestBody UpdateClientIdPrefixDTO clientIdPrefixDTO) {
         try {
             return new ResponseEntity<>(clientService.updateClientIdPrefix(clientIdPrefixDTO), HttpStatus.OK);
@@ -66,7 +66,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping("/update/name")
+    @PatchMapping("/update/name")
     public ResponseEntity<?> updateClientName(@RequestBody UpdateClientNameDTO clientNameDTO) {
         try {
             return new ResponseEntity<>(clientService.updateClientName(clientNameDTO), HttpStatus.OK);
@@ -74,6 +74,7 @@ public class ClientController {
             return new ResponseEntity<>("Failed to update the client: " + clientNameDTO.oldName(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
    @PutMapping("/update/users")
    public ResponseEntity<?> updateClientUsers(@RequestBody UpdateClientUserList clientUserList) {
@@ -92,6 +93,7 @@ public class ClientController {
             return new ResponseEntity<>("Failed to retrieve the client user list", HttpStatus.BAD_REQUEST);
         }
    }
+
    @GetMapping("/size")
     public ResponseEntity<?> getClientSize() {
        try {
@@ -99,5 +101,10 @@ public class ClientController {
        } catch (RuntimeException e) {
            return new ResponseEntity<>("Failed to retrieve the client user list", HttpStatus.BAD_REQUEST);
        }
+   }
+
+   @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+        return new ResponseEntity<>(clientService.deleteClient(id), HttpStatus.OK);
    }
 }

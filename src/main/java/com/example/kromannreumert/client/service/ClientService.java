@@ -99,7 +99,7 @@ public class ClientService {
 
     public String updateClientUserList(UpdateClientUserList userList) {
         Client updateClientUsers = clientRepository.getClientByIDPrefix(userList.clientIdPrefix()).orElseThrow(() -> new RuntimeException("Client not found"));
-        Set<User> users = userList.user().stream().map(u -> userRepository.findByUsername(u).orElseThrow(() -> new RuntimeException("User not found"))).collect(Collectors.toSet());
+        Set<User> users = userList.user().stream().map(u -> userRepository.findByName(u).orElseThrow(() -> new RuntimeException("User not found"))).collect(Collectors.toSet());
         updateClientUsers.setUsers(users);
         clientRepository.save(updateClientUsers);
         return "Successfully updated users with: " + userList.user();
