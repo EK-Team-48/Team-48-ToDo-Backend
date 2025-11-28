@@ -2,6 +2,7 @@ package com.example.kromannreumert.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,9 +30,22 @@ public class SecurityConfig {
                                 "/h2-console/**")
                         .permitAll()
 
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/manager/**").hasRole("MANAGER")
-                        .requestMatchers("/api/v1/client/**").hasRole("SAGSBEHANDLER")
+                        .requestMatchers("/api/v1/**").hasRole("ADMIN")
+
+                        //giver Sagsbehandler specifikt adgang til GET endpoints i /clients
+                        .requestMatchers(HttpMethod.GET, "/api/v1/clients/**").hasRole("SAGSBEHANDLER")
+                        .requestMatchers("/api/v1/clients/**").hasRole("PARTNER")
+
+                        //giver jurist specifikt adgang til GET endpoints i /cases
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cases/**").hasRole("JURIST")
+                        .requestMatchers("/api/v1/cases/**").hasAnyRole("PARTNER", "SAGSBEHANDLER")
+
+
+                        .requestMatchers("/api/v1/todos/**").hasAnyRole("PARTNER", "SAGSBEHANDLER", "JURIST")
+
+
+
+
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(
                         oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

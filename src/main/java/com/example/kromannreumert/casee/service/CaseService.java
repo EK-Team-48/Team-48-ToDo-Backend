@@ -15,17 +15,17 @@ public class CaseService {
         this.caseRepository = caseRepository;
     }
 
-    public List<Casee> getAllClients() {
+    public List<Casee> getAllCases() {
         return caseRepository.findAll();
     }
 
 
-    public Casee getClientByName(String caseName) {
+    public Casee getCaseByName(String caseName) {
         return caseRepository.findAllByName(caseName).orElseThrow(() -> new RuntimeException("Case not found"));
     }
 
 
-    public String addCase() {
+    public String createCase() {
         return "TODO";
     }
 
