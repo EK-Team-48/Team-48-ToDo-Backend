@@ -47,10 +47,10 @@ public class KromannReumertApplication {
 
 
             // CREATE User in DB
-            userRepo.save(new User(null,"testAdmin","test","test@test.dk", passwordEncoder.encode( "test"), now,Set.of(admin)));
-            userRepo.save(new User(null,"testPartner","test","test@test.dk",passwordEncoder.encode("test"), now,Set.of(partner)));
-            userRepo.save(new User(null,"testSagsbehandler","test","test@test.dk",passwordEncoder.encode("test"), now,Set.of(sagsbehandler)));
-            userRepo.save(new User(null,"testJurist","test","test@test.dk",passwordEncoder.encode("test"), now,Set.of(jurist)));
+            userRepo.save(new User(null,"testAdmin","Simon","test@test.dk", passwordEncoder.encode( "test"), now,Set.of(admin)));
+            userRepo.save(new User(null,"testPartner","Hannibal","test@test.dk",passwordEncoder.encode("test"), now,Set.of(partner)));
+            userRepo.save(new User(null,"testSagsbehandler","Jesus","test@test.dk",passwordEncoder.encode("test"), now,Set.of(sagsbehandler)));
+            userRepo.save(new User(null,"testJurist","Victor","test@test.dk",passwordEncoder.encode("test"), now,Set.of(jurist)));
 
             clientRepository.save(new Client(null, "Zahaa Enterprise", Set.of(user), 99000L));
             clientRepository.save(new Client(null, "Hannibal Enterprise", Set.of(user), 99001L));
