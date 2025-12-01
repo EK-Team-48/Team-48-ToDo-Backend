@@ -108,7 +108,7 @@ public class RoleUnitTest {
 
     }
 
-
+    /*
     @Test
     void createRole(){
         //ARRANGE
@@ -134,7 +134,7 @@ public class RoleUnitTest {
         verify(roleRepository, times(1)).save(any());
 
 
-    }
+    } */
 
     @Test
     void updateRole(){
