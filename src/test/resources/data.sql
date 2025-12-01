@@ -1,7 +1,7 @@
 INSERT INTO role (id, role_name) VALUES
     (1, 'ADMIN'),
     (2, 'PARTNER'),
-    (3, 'SAGBEHANDLER');
+    (3, 'SAGSBEHANDLER');
 
 INSERT INTO users (user_id, username, name, email, password, created_date) VALUES
         (1, 'admin', 'System Admin', 'admin@example.com',
@@ -16,9 +16,9 @@ INSERT INTO user_roles (role_id, user_id) VALUES
         (2, 2),
         (3, 3);
 
-INSERT INTO client (id, name, idprefix) VALUES
-        (1, 'Kromann Reumert', 1000),
-        (2, 'AlphaSolution', 2000);
+INSERT INTO client (name, idprefix) VALUES
+        ('Kromann Reumert', 1000),
+        ('AlphaSolution', 2000);
 
 INSERT INTO casee (id, name, client_id, id_prefix) VALUES
         (1, 'Contract Review', 1, 1100),
@@ -35,8 +35,7 @@ INSERT INTO logging (id, actor, action, details, timestamp) VALUES
 
 INSERT INTO client_assignee (user_id, client_id) VALUES
         (2, 1),
-        (2, 2),
-        (3, 1);
+        (2, 2);
 
 INSERT INTO case_assignee (user_id, case_id) VALUES
         (2, 1),
