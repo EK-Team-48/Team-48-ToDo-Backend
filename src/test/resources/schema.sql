@@ -28,7 +28,8 @@ CREATE TABLE casee (
                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
                       name VARCHAR(255) NOT NULL,
                       client_id BIGINT NOT NULL,
-                      id_prefix BIGINT
+                      id_prefix BIGINT,
+                      responsible_user_user_id BIGINT
 );
 
 CREATE TABLE to_do (
@@ -57,9 +58,11 @@ CREATE TABLE client_assignee (
 );
 
 CREATE TABLE case_assignee (
-                               user_id BIGINT NOT NULL,
                                case_id BIGINT NOT NULL,
-                               PRIMARY KEY (user_id, case_id)
+                               user_id BIGINT NOT NULL,
+                               PRIMARY KEY (case_id, user_id),
+                               FOREIGN KEY (case_id) REFERENCES casee(id),
+                               FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE todo_assignee (

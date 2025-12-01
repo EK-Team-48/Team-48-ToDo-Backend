@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/v1/cases")
 public class CaseController {
@@ -28,9 +30,9 @@ public class CaseController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getCases() {
+    public ResponseEntity<?> getCases(Principal principal) {
         try {
-            return new ResponseEntity<>(caseService.getAllCases(), HttpStatus.OK);
+            return new ResponseEntity<>(caseService.getAllCases(principal), HttpStatus.OK);
         } catch(RuntimeException e) {
             return new ResponseEntity<>("Failed to retrieve cases", HttpStatus.BAD_REQUEST);
         }

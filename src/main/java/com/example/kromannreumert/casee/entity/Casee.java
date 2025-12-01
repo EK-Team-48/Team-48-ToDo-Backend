@@ -33,10 +33,10 @@ public class Casee {
     @ManyToMany
     @JoinTable(
             name = "case_assignee",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "case_id")
+            joinColumns = @JoinColumn(name = "case_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    public Set<User> users;
+    private Set<User> users;
 
     @NotNull
     @Column(unique = true)

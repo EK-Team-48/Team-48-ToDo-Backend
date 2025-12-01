@@ -12,6 +12,7 @@ import com.example.kromannreumert.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,9 +31,21 @@ public class CaseService {
         this.caseMapper = caseMapper;
     }
 
-    public List<Casee> getAllCases() {
+    public List<Casee> getAllCases(Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (currentUser.getRoles().stream().anyMatch(r -> r.getRoleName().equals("JURIST"))) {
+            // Return only cases where this user is assigned
+            return caseRepository.findAll().stream()
+                    .filter(c -> c.getUsers().contains(currentUser))
+                    .collect(Collectors.toList());
+        }
+
+        // All other roles get all cases
         return caseRepository.findAll();
     }
+
 
 
     public Casee getCaseByName(String caseName) {
