@@ -52,13 +52,13 @@ public class RoleIntegrationTest {
         mockMvc.perform(get(baseUrl).with(user("ADMIN").roles("ADMIN")))
                 .andExpect(status().isOk())
                         .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].role").value("ADMIN"))
+                .andExpect(jsonPath("$[0].roleName").value("ADMIN"))
                 .andExpect(jsonPath("$[1].id").value(4))
-                .andExpect(jsonPath("$[1].role").value("JURIST"))
+                .andExpect(jsonPath("$[1].roleName").value("JURIST"))
                 .andExpect(jsonPath("$[2].id").value(2))
-                .andExpect(jsonPath("$[2].role").value("PARTNER"))
+                .andExpect(jsonPath("$[2].roleName").value("PARTNER"))
                 .andExpect(jsonPath("$[3].id").value(3))
-                .andExpect(jsonPath("$[3].role").value("SAGSBEHANDLER"));
+                .andExpect(jsonPath("$[3].roleName").value("SAGSBEHANDLER"));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class RoleIntegrationTest {
         mockMvc.perform(get(baseUrl + "/1").with(user("ADMIN").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.role").value("ADMIN"));
+                .andExpect(jsonPath("$.roleName").value("ADMIN"));
     }
 
     @Test
