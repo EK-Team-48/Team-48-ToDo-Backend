@@ -21,13 +21,15 @@ public class CaseController {
     CaseService caseService;
 
     @PostMapping("")
-    public ResponseEntity<?> createCase(@RequestBody CaseRequestDTO request) {
+    public ResponseEntity<?> createCase(@RequestBody CaseRequestDTO request, Principal principal) {
         try {
-            return new ResponseEntity<>(caseService.createCase(request), HttpStatus.OK);
-        } catch(RuntimeException e) {
+            CaseResponseDTO response = caseService.createCase(request, principal);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>("Failed to create case: " + request.name(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @GetMapping("")
     public ResponseEntity<?> getCases(Principal principal) {
@@ -39,18 +41,18 @@ public class CaseController {
     }
 
     @PutMapping("")
-    public ResponseEntity<?> updateCase(@RequestBody CaseUpdateRequest request) {
+    public ResponseEntity<?> updateCase(@RequestBody CaseUpdateRequest request, Principal principal) {
         try {
-            return new ResponseEntity<>(caseService.updateCase(request), HttpStatus.OK);
+            return new ResponseEntity<>(caseService.updateCase(request, principal), HttpStatus.OK);
         } catch(RuntimeException e) {
             return new ResponseEntity<>("Failed to update case" + request.name(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteCase(@RequestBody CaseDeleteRequestDTO request) {
+    public ResponseEntity<?> deleteCase(@RequestBody CaseDeleteRequestDTO request, Principal principal) {
         try {
-            return ResponseEntity.ok(caseService.deleteCase(request));
+            return ResponseEntity.ok(caseService.deleteCase(request, principal));
         } catch(RuntimeException e) {
             return new ResponseEntity<>("Failed to delete case" + request.id(), HttpStatus.BAD_REQUEST);
         }

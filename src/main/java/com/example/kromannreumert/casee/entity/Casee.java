@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,17 +37,18 @@ public class Casee {
             joinColumns = @JoinColumn(name = "case_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @NotNull
     @Column(unique = true)
     public Long idPrefix;
 
-    public Casee(String name, Client client, Set<User> users, Long idPrefix) {
+    public Casee(String name, Client client, Set<User> users, Long idPrefix, User responsibleUser) {
         this.name = name;
         this.client = client;
         this.users = users;
         this.idPrefix = idPrefix;
+        this.responsibleUser = responsibleUser;
     }
 
 }

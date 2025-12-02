@@ -47,7 +47,7 @@ CREATE TABLE logging (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
                          actor VARCHAR(255) NOT NULL,
                          action VARCHAR(255) NOT NULL,
-                         details VARCHAR(255),
+                         details VARCHAR(2000),
                          timestamp TIMESTAMP NOT NULL
 );
 
