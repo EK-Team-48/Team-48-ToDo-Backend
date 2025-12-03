@@ -84,6 +84,20 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    public UserResponseDTO getUserByUsername(String username){
+        try {
+            Optional<User> user = userRepository.findByUsername(username);
+            UserResponseDTO responseDTO = user.stream()
+                    .map(userMapper::toUserResponseDTO)
+                    .toList().getFirst();
+
+            return responseDTO;
+
+        } catch(RuntimeException e){
+            throw new RuntimeException("Could not find user with this username: " + e);
+        }
+    }
+
     public List<UserResponseDTO>getAllUsers(String name){
         try {
             List<User> users = userRepository.findAll();
