@@ -53,7 +53,11 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(404).body(
-                new ErrorResponse(404, "Not Found", ex.getMessage(), request.getDescription(false), ex.getAction().name())
+                new ErrorResponse(404,
+                        "Not Found",
+                        ex.getMessage(),
+                        request.getDescription(false),
+                        ex.getAction().name())
         );
     }
 
@@ -70,7 +74,7 @@ public class GlobalExceptionHandler {
      */
 
     @ExceptionHandler(ActionFailedException.class)
-    public ResponseEntity<?> handle500(ActionFailedException ex) {
+    public ResponseEntity<?> handle500(ActionFailedException ex, WebRequest request) {
 
         loggingService.log(
                 ex.getLogAction(),
@@ -78,7 +82,14 @@ public class GlobalExceptionHandler {
                 ex.getCause() != null ? ex.getCause().getMessage() : "Unknown error"
         );
 
-        return ResponseEntity.status(500).body("Internal error during: " + ex.getLogAction());
+        return ResponseEntity.status(500).body(new ErrorResponse(
+                500,
+                "Internal Server Error",
+                ex.getCause() != null ? ex.getCause().getMessage() : "Unknown error",
+                String.valueOf(request),
+                ex.getLogAction().name()
+                )
+        );
     }
 
     /*

@@ -118,13 +118,13 @@ public class ClientService {
     }
 
 
-    public int getClientSize(String actor) {
+    public long getClientSize(String actor) {
         try {
-            List<Client> clients = clientRepository.findAll();
+            long count = clientRepository.count();
 
             loggingService.log(LogAction.VIEW_ALL_CLIENTS, actor, "Checked client count");
 
-            return clients.size();
+            return count;
 
         } catch (Exception e) {
             if (e instanceof ApiBusinessException) throw e;
@@ -226,16 +226,16 @@ public class ClientService {
                             new ClientNotFoundException(
                                     LogAction.UPDATE_CLIENT_FAILED,
                                     actor,
-                                    "idPrefix=" + dto.clientIdPrefix()
+                                    "idPrefix: " + dto.clientIdPrefix()
                             ));
 
             Set<User> users = dto.user().stream()
-                    .map(username -> userRepository.findByName(username)
+                    .map(name -> userRepository.findByName(name)
                             .orElseThrow(() ->
                                     new UserNotFoundException(
                                             LogAction.VIEW_ONE_USER_FAILED,
                                             actor,
-                                            "username='" + username + "'"
+                                            "name: " + name
                                     )))
                     .collect(Collectors.toSet());
 
