@@ -55,4 +55,10 @@ public class UserController {
         return new ResponseEntity<>(userService.getNumberOfAllUsers(), HttpStatus.OK);
     }
 
+
+    @GetMapping("/singleUser/{username}")
+    public ResponseEntity<UserResponseDTO>getUserByUsername(@PathVariable String username){
+        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
+    }
+
 }
