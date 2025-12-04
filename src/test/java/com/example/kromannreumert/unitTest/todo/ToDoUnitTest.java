@@ -214,6 +214,7 @@ public class ToDoUnitTest {
         ToDoRequestNewToDoDto request = new ToDoRequestNewToDoDto(
                 "ny todo",
                 "beskrivelse",
+                1L,
                 LocalDate.of(2025, 12, 1),
                 LocalDate.of(2025, 12, 2),
                 Priority.MEDIUM

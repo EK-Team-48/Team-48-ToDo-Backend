@@ -1,5 +1,7 @@
 package com.example.kromannreumert.todo.service;
 
+import com.example.kromannreumert.casee.entity.Casee;
+import com.example.kromannreumert.casee.repository.CaseRepository;
 import com.example.kromannreumert.logging.entity.LogAction;
 import com.example.kromannreumert.logging.service.LoggingService;
 import com.example.kromannreumert.todo.dto.ToDoRequestDto;
@@ -11,6 +13,7 @@ import com.example.kromannreumert.todo.repository.ToDoRepository;
 import com.example.kromannreumert.user.entity.Role;
 import com.example.kromannreumert.user.entity.User;
 import com.example.kromannreumert.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +28,14 @@ public class ToDoService {
     private final ToDoMapper toDoMapper;
     private final LoggingService loggingService;
     private final UserRepository userRepository;
+    private final CaseRepository caseRepository;
 
-    public ToDoService(ToDoRepository toDoRepository, ToDoMapper toDoMapper, LoggingService loggingService, UserRepository userRepository) {
+    public ToDoService(ToDoRepository toDoRepository, ToDoMapper toDoMapper, LoggingService loggingService, UserRepository userRepository, CaseRepository caseRepository) {
         this.toDoRepository = toDoRepository;
         this.toDoMapper = toDoMapper;
         this.loggingService = loggingService;
         this.userRepository = userRepository;
+        this.caseRepository = caseRepository;
     }
 
     public int getToDoSize() {
@@ -95,7 +100,10 @@ public class ToDoService {
 
     public ToDoResponseDto createToDo(String name, ToDoRequestNewToDoDto todoRequestDto) {
         try {
+            Casee casee = caseRepository.findById(todoRequestDto.caseId())
+                    .orElseThrow(() -> new EntityNotFoundException("Case not found"));
             ToDo toDo = toDoMapper.toToDo(todoRequestDto);
+            toDo.setCaseId(casee);
             toDo = toDoRepository.save(toDo);
 
             loggingService.log(LogAction.CREATE_TODO, name, "Created a todo: " + toDo.getName());
