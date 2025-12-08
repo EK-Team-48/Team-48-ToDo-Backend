@@ -2,6 +2,10 @@ package com.example.kromannreumert.todo.service;
 
 import com.example.kromannreumert.casee.entity.Casee;
 import com.example.kromannreumert.casee.repository.CaseRepository;
+import com.example.kromannreumert.exception.customException.http4xxExceptions.ApiBusinessException;
+import com.example.kromannreumert.exception.customException.http4xxExceptions.UserNotFoundException;
+import com.example.kromannreumert.exception.customException.http4xxExceptions.toDo.ToDoNotFoundException;
+import com.example.kromannreumert.exception.customException.http5xxException.ActionFailedException;
 import com.example.kromannreumert.logging.entity.LogAction;
 import com.example.kromannreumert.logging.service.LoggingService;
 import com.example.kromannreumert.todo.dto.ToDoAssigneeUpdateRequest;
@@ -47,7 +51,11 @@ public class ToDoService {
     public List<ToDoResponseDto> findAll(String username) {
         try {
             User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                    .orElseThrow(() -> new UserNotFoundException(
+                            LogAction.VIEW_ONE_USER_FAILED,
+                            username,
+                            "name: " + username
+                    ));
 
             Set<Role> roles = user.getRoles();
 
@@ -72,8 +80,8 @@ public class ToDoService {
 
             return responseDtos;
         } catch (Exception e) {
-            loggingService.log(LogAction.VIEW_ALL_TODOS_FAILED, username, "Failed to view todos");
-            throw new RuntimeException("Failed fetching todos", e);
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.VIEW_ALL_TODOS_FAILED, username, e);
         }
     }
 
@@ -85,7 +93,9 @@ public class ToDoService {
     public ToDoResponseDto findToDoById(String name, Long id) {
         try {
             ToDo toDo = toDoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
+                    .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED,
+                            name,
+                            "id" + id));
 
             ToDoResponseDto responseDto = toDoMapper.toToDoResponseDto(toDo);
 
@@ -93,15 +103,16 @@ public class ToDoService {
 
             return responseDto;
         } catch (Exception e) {
-            loggingService.log(LogAction.VIEW_ONE_TODO_FAILED, name, "Failed to view todo with id: " + id);
-
-            throw new RuntimeException("Todo not found with id: " + id, e);
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.VIEW_ALL_TODOS_FAILED, name, e);
         }
     }
 
     public Set<User> getCaseAssigneesForTodo(Long todoId) {
         ToDo todo = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new EntityNotFoundException("Todo not found"));
+                .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED,
+                        null,
+                        "id" + todoId));
 
         Casee casee = todo.getCaseId();
         return casee.getUsers();
@@ -109,11 +120,15 @@ public class ToDoService {
 
     public ToDoResponseDto updateAssignees(Long todoId, ToDoAssigneeUpdateRequest request, String name) {
         ToDo todo = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new EntityNotFoundException("Todo not found"));
+                .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_CLIENT_FAILED,
+                        name,
+                        "id" + todoId));
 
         Set<User> newAssignees = request.userIds().stream()
                 .map(id -> userRepository.findById(id.intValue())
-                        .orElseThrow(() -> new EntityNotFoundException("User not found: " + id)))
+                        .orElseThrow(() -> new UserNotFoundException(LogAction.VIEW_ONE_USER_FAILED,
+                                name,
+                                "id" + todoId)))
                 .collect(Collectors.toSet());
 
         int oldSize = todo.getUsers() != null ? todo.getUsers().size() : 0;
@@ -134,6 +149,7 @@ public class ToDoService {
     public ToDoResponseDto createToDo(String name, ToDoRequestNewToDoDto todoRequestDto) {
         try {
             Casee casee = caseRepository.findById(todoRequestDto.caseId())
+                    // Add Casee exception and replace Entity not found here
                     .orElseThrow(() -> new EntityNotFoundException("Case not found"));
             ToDo toDo = toDoMapper.toToDo(todoRequestDto);
             toDo.setCaseId(casee);
@@ -143,29 +159,36 @@ public class ToDoService {
 
             return toDoMapper.toToDoResponseDto(toDo);
         } catch (RuntimeException e) {
-            loggingService.log(LogAction.CREATE_TODO_FAILED, name, "Failed to create todo: " + todoRequestDto.name());
-            throw new RuntimeException("Could not create todo", e);
+
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.CREATE_TODO_FAILED, name, e);
         }
     }
 
     public void deleteTodo(String name, Long id) {
         try {
             ToDo toDo = toDoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Could not find todo with id: " + id));
+                    .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED,
+                            name,
+                            "id: " + id));
 
             toDoRepository.delete(toDo);
-
             loggingService.log(LogAction.DELETE_TODO, name, "Deleted todo: " + toDo.getName() + ", id: " + id);
+
         } catch (Exception e) {
-            loggingService.log(LogAction.DELETE_TODO_FAILED, name, "Failed to delete todo with id: " + id + " " + e.getMessage());
-            throw new RuntimeException("Could not delete todo with id: " + id, e);
+
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.DELETE_TODO_FAILED, name, e);
+
         }
     }
 
     public ToDoResponseDto updateTodo(Long id, String name, ToDoRequestDto todoRequestDto) {
         try {
             ToDo todo = toDoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Could not find todo with id: " + id));
+                    .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED,
+                            name,
+                            "id: " + id));
 
             todo.setName(todoRequestDto.name());
             todo.setDescription(todoRequestDto.description());
@@ -182,8 +205,8 @@ public class ToDoService {
             return toDoMapper.toToDoResponseDto(todo);
 
         } catch (Exception e) {
-            loggingService.log(LogAction.UPDATE_TODO_FAILED, name, "Failed to update todo: " + todoRequestDto.name() + " " + e.getMessage());
-            throw new RuntimeException("Could not update todo: " + todoRequestDto.name(), e);
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.UPDATE_TODO_FAILED, name, e);
         }
     }
 
