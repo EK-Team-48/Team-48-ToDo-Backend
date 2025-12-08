@@ -116,13 +116,14 @@ public class ToDoService {
                         .orElseThrow(() -> new EntityNotFoundException("User not found: " + id)))
                 .collect(Collectors.toSet());
 
+        int oldSize = todo.getUsers() != null ? todo.getUsers().size() : 0;
+
         todo.setUsers(newAssignees);
+        int newSize = newAssignees.size();
 
-        if (request.userIds().size() > todo.getUsers().size()) {
+        if (newSize > oldSize) {
             loggingService.log(LogAction.ADDED_USERS_TO_TODO, name, "Assigned users to: " + todo.getName());
-        }
-
-        if (request.userIds().size() > todo.getUsers().size()) {
+        } else if (newSize < oldSize) {
             loggingService.log(LogAction.REMOVED_USERS_TO_TODO, name, "Removed users from: " + todo.getName());
         }
 
@@ -194,11 +195,8 @@ public class ToDoService {
                     .map(toDoMapper::toToDoResponseDto)
                     .toList();
 
-            loggingService.log(LogAction.VIEW_ALL_TODOS, username, "Viewed todos assigned to user");
-
             return responseDtos;
         } catch (Exception e) {
-            loggingService.log(LogAction.VIEW_ALL_TODOS_FAILED, username, "Failed to view todos assigned to user");
             throw new RuntimeException("Failed fetching assigned todos", e);
         }
     }
