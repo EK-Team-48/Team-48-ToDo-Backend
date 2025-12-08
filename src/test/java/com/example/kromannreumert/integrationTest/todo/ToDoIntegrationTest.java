@@ -269,7 +269,7 @@ public class ToDoIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "jurist01", roles = "JURIST")
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void updateAssignees_unknownTodo_returnsBadRequest() throws Exception {
         ToDoAssigneeUpdateRequest requestDto =
                 new ToDoAssigneeUpdateRequest(List.of(2L));

@@ -190,12 +190,9 @@ public class ToDoService {
     public List<ToDoResponseDto> findAssignedToUser(String username) {
         try {
             List<ToDo> toDos = toDoRepository.findDistinctByUsers_UsernameAndArchivedFalse(username);
-
-            List<ToDoResponseDto> responseDtos = toDos.stream()
+            return toDos.stream()
                     .map(toDoMapper::toToDoResponseDto)
                     .toList();
-
-            return responseDtos;
         } catch (Exception e) {
             throw new RuntimeException("Failed fetching assigned todos", e);
         }
