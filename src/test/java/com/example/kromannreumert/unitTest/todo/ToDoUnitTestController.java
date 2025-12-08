@@ -1,5 +1,7 @@
 package com.example.kromannreumert.unitTest.todo;
 
+import com.example.kromannreumert.exception.customException.http4xxExceptions.toDo.ToDoNotFoundException;
+import com.example.kromannreumert.logging.entity.LogAction;
 import com.example.kromannreumert.logging.service.LoggingService;
 import com.example.kromannreumert.security.config.SecurityConfig;
 import com.example.kromannreumert.todo.controller.ToDoController;
@@ -232,7 +234,7 @@ public class ToDoUnitTestController {
     void deleteToDoNotFoundWhileLoggedIn() throws Exception {
         Long id = 999L;
 
-        doThrow(new RuntimeException("Todo not found"))
+        doThrow(new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED, "Abdi", "Todo not found"))
                 .when(toDoService).deleteTodo("jurist", id);
 
         mockMvc.perform(delete("/api/v1/todos/{id}", id))
@@ -310,7 +312,7 @@ public class ToDoUnitTestController {
                 false
         );
 
-        doThrow(new RuntimeException("Todo not found"))
+        doThrow(new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED, "Abdi", "Todo not found"))
                 .when(toDoService).updateTodo(id, "jurist", requestDto);
 
         String json = objectMapper.writeValueAsString(requestDto);

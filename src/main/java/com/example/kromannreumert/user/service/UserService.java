@@ -2,6 +2,9 @@ package com.example.kromannreumert.user.service;
 
 import com.example.kromannreumert.logging.entity.LogAction;
 import com.example.kromannreumert.logging.service.LoggingService;
+import com.example.kromannreumert.exception.customException.http4xxExceptions.ApiBusinessException;
+import com.example.kromannreumert.exception.customException.http4xxExceptions.UserNotFoundException;
+import com.example.kromannreumert.exception.customException.http5xxException.ActionFailedException;
 import com.example.kromannreumert.user.dto.UserRequestDTO;
 import com.example.kromannreumert.user.dto.UserResponseDTO;
 import com.example.kromannreumert.user.entity.Role;
@@ -97,7 +100,8 @@ public class UserService implements UserDetailsService {
                     .toList().getFirst();
 
         } catch(RuntimeException e){
-            throw new RuntimeException("Could not find user with this username: " + e);
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.VIEW_ONE_USER_FAILED, username, e);
         }
     }
 
@@ -113,7 +117,8 @@ public class UserService implements UserDetailsService {
             return dtoList;
         } catch(RuntimeException e){
             loggingService.log(LogAction.VIEW_ALL_USERS_FAILED, name, "Failed to view all users");
-            throw new RuntimeException("Could not load all users");
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.VIEW_ALL_USERS_FAILED, name, e);
         }
     }
 
@@ -129,7 +134,8 @@ public class UserService implements UserDetailsService {
 
         } catch(RuntimeException e){
             loggingService.log(LogAction.VIEW_ONE_USER_FAILED, name, "Failed to view one user with id: " + id);
-            throw new RuntimeException("Could not load user" + id);
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.VIEW_ONE_USER_FAILED, name, e);
         }
     }
 
@@ -166,7 +172,8 @@ public class UserService implements UserDetailsService {
 
         } catch(RuntimeException e){
             loggingService.log(LogAction.UPDATE_USER_FAILED, name, "Failed to update user, with user id:" + userId);
-            throw new RuntimeException("Could not update user");
+            if (e instanceof ApiBusinessException) throw e;
+            throw new ActionFailedException(LogAction.UPDATE_USER_FAILED, name, e);
         }
     }
 
@@ -176,7 +183,7 @@ public class UserService implements UserDetailsService {
             loggingService.log(LogAction.DELETE_USER, name, "Deleted user with user Id: " + userId);
         }catch(RuntimeException e){
             loggingService.log(LogAction.DELETE_USER_FAILED, name, "Failed to delete user, with user id: " + userId);
-            throw new RuntimeException("Could not delete user: " + userId);
+            throw new ActionFailedException(LogAction.DELETE_USER_FAILED, name, e);
         }
     }
 
