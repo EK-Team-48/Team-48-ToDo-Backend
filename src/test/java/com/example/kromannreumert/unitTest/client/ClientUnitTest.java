@@ -53,7 +53,7 @@ public class ClientUnitTest {
         // ARRANGE
         Long idPrefix = 1000L;
         String clientName = "ClientTestName";
-        Client createClient = new Client(1L, clientName, null, idPrefix);
+        Client createClient = new Client(1L, clientName, Set.of(), idPrefix);
         ClientResponeDTO convert = new ClientResponeDTO(1L, clientName, null, idPrefix);
 
         when(clientRepository.findAll()).thenReturn(List.of(createClient));
@@ -107,7 +107,7 @@ public class ClientUnitTest {
         // ARRANGE
         Long idPrefix = 1000L;
         String clientName = "ClientTestName";
-        Client createClient = new Client(1L, clientName, null, idPrefix);
+        Client createClient = new Client(1L, clientName, Set.of(), idPrefix);
         ClientResponeDTO convertClient = new ClientResponeDTO(createClient.getId(), createClient.getName(), null, createClient.getIDPrefix());
 
         when(clientRepository.findClientByName(clientName)).thenReturn(Optional.of(createClient));
@@ -140,7 +140,7 @@ public class ClientUnitTest {
         User createUser = new User(1L,"TestUser", "Test", "Test@1234", "1234", null, null);
         Set<String> users = Set.of(createUser.getUsername());
         ClientRequestDTO createClient = new ClientRequestDTO(clientName, users, idPrefix);
-        Client convertDTOToClient = new Client(null, createClient.clientName(), null, createClient.idPrefix());
+        Client convertDTOToClient = new Client(null, createClient.clientName(), Set.of(), createClient.idPrefix());
 
         when(clientRepository.save(any(Client.class))).thenReturn(convertDTOToClient);
         when(userRepository.findByUsername("TestUser")).thenReturn(Optional.of(createUser));
@@ -164,7 +164,7 @@ public class ClientUnitTest {
 
         // ARRANGE
         UpdateClientNameDTO updateName = new UpdateClientNameDTO("hi", "UpdatedClientName");
-        Client oldClient = new Client(1L, updateName.oldName(), null, null);
+        Client oldClient = new Client(1L, updateName.oldName(), Set.of(), null);
         Client updatedClient = new Client (oldClient.getId(), updateName.newName(), oldClient.users, oldClient.getIDPrefix());
 
         when(clientRepository.findClientByName(oldClient.getName())).thenReturn(Optional.of(oldClient));
