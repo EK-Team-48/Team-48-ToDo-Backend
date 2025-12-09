@@ -74,8 +74,8 @@ public class KromannReumertApplication {
                 caseUsers.add(userRepo.findById(5)
                         .orElseThrow(() -> new RuntimeException("User not found")));
 
-                caseRepository.save(new Casee("Ossas-Sagen", caseClient, caseUsers, 10455L, user));
-                caseRepository.save(new Casee("Sagen om Simon", caseClient, new HashSet<>(), 10696L, user));
+                caseRepository.save(new Casee("Ossas-Sagen", caseClient, caseUsers, 10455L, user, LocalDateTime.now()));
+                caseRepository.save(new Casee("Sagen om Simon", caseClient, new HashSet<>(), 10696L, user, LocalDateTime.now()));
 
 
 

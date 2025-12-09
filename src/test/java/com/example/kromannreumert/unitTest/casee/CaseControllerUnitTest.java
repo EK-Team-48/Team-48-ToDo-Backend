@@ -131,7 +131,7 @@ public class CaseControllerUnitTest {
     @Test
     @WithMockUser(roles = {"ADMIN", "PARTNER", "SAGSBEHANDLER"})
     void should_updateCase_isOK_forAuthorizedRoles() throws Exception {
-        CaseUpdateRequest request = new CaseUpdateRequest(1L, "Updated Case", 2000L, 2, Set.of(2, 3));
+        CaseUpdateRequest request = new CaseUpdateRequest(1L, "Updated Case", 2000L, "testAdmin", Set.of(2, 3));
         CaseResponseDTO response = new CaseResponseDTO("Updated Case", null, Collections.emptySet(), 2000L, null);
 
         when(caseService.updateCase(eq(request), any(Principal.class))).thenReturn(response);
@@ -150,7 +150,7 @@ public class CaseControllerUnitTest {
     void should_not_updateCase_andReturnForbidden() throws Exception {
 
         CaseUpdateRequest dto =
-                new CaseUpdateRequest(1L, "Updated Case", 2000L, 2, Set.of(2, 3));
+                new CaseUpdateRequest(1L, "Updated Case", 2000L, "testJurist", Set.of(2, 3));
 
         // mock is not actually needed because service should not be called,
         // but we include it to mimic the ClientController test structure.
@@ -171,7 +171,7 @@ public class CaseControllerUnitTest {
 
     @Test
     void should_updateCase_isUnauthorized_forNoUser() throws Exception {
-        CaseUpdateRequest request = new CaseUpdateRequest(1L, "Updated Case", 2000L, 2, Set.of(2, 3));
+        CaseUpdateRequest request = new CaseUpdateRequest(1L, "Updated Case", 2000L, "testJurist", Set.of(2, 3));
 
         mockMvc.perform(put(BASE)
                         .contentType(MediaType.APPLICATION_JSON)

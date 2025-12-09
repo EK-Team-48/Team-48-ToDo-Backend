@@ -161,7 +161,7 @@ public class CaseIntegrationTest {
                 1L,
                 "Updated-Enterprise-Case",
                 3310L,
-                2,
+                "testAdmin",
                 Set.of(2, 3)
         );
 
@@ -172,7 +172,7 @@ public class CaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(dto.name()))
                 .andExpect(jsonPath("$.idPrefix").value(dto.idPrefix()))
-                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUserId()))
+                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUsername()))
                 .andExpect(jsonPath("$.users.length()").value(dto.assigneeIds().size()));
     }
 
@@ -182,7 +182,7 @@ public class CaseIntegrationTest {
                 2L,
                 "Updated-Partner-Case",
                 4410L,
-                2,
+                "testPartner",
                 Set.of(2)
         );
 
@@ -193,7 +193,7 @@ public class CaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(dto.name()))
                 .andExpect(jsonPath("$.idPrefix").value(dto.idPrefix()))
-                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUserId()))
+                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUsername()))
                 .andExpect(jsonPath("$.users[0].userId").value(2));
     }
 
@@ -203,7 +203,7 @@ public class CaseIntegrationTest {
                 1L,
                 "Updated-Sagsbehandler-Case",
                 5510L,
-                3,
+                "testSagsbehandler",
                 Set.of(3)
         );
 
@@ -214,7 +214,7 @@ public class CaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(dto.name()))
                 .andExpect(jsonPath("$.idPrefix").value(dto.idPrefix()))
-                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUserId()))
+                .andExpect(jsonPath("$.responsibleUser.userId").value(dto.responsibleUsername()))
                 .andExpect(jsonPath("$.users[0].userId").value(3));
     }
 
@@ -224,7 +224,7 @@ public class CaseIntegrationTest {
                 1L,
                 "Jurist-Update-Attempt",
                 6601L,
-                4,
+                "testJurist",
                 Set.of(4)
         );
 

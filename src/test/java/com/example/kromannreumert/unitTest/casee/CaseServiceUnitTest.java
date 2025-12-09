@@ -145,7 +145,7 @@ public class CaseServiceUnitTest {
     // --------- updateCase ---------
     @Test
     void updateCase_updatesAndLogs() {
-        CaseUpdateRequest dto = new CaseUpdateRequest(1L, "Updated Case", 200L, 2, Set.of(2));
+        CaseUpdateRequest dto = new CaseUpdateRequest(1L, "Updated Case", 200L, "testPartner", Set.of(2));
 
         Casee existing = new Casee();
         existing.setId(1L);

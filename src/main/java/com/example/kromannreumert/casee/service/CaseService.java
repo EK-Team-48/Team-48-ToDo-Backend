@@ -17,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -80,7 +81,8 @@ public class CaseService {
                 client,
                 users,
                 request.idPrefix(),
-                responsibleUser
+                responsibleUser,
+                LocalDateTime.now()
         );
 
         caseRepository.save(newCase);
@@ -107,7 +109,7 @@ public class CaseService {
         Casee target = caseRepository.findById(request.id())
                 .orElseThrow(() -> new EntityNotFoundException("Case not found"));
 
-        User responsible = userRepository.findById(request.responsibleUserId())
+        User responsible = userRepository.findByUsername(request.responsibleUsername())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Set<User> assignees = request.assigneeIds().stream()
