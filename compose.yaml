@@ -38,5 +38,14 @@ services:
       timeout: 5s
       retries: 18
 
+    # Adding a simple NGINX server to test to see how it works
+  nginx:
+      image: nginx:latest
+      ports:
+        - "80:80" # <-- Also need to change this (This is onyl for my test)
+      volumes:
+        - /Users/zahaawii/IdeaProjects/ToDo-Frontend:/usr/share/nginx/html # <- If someone else has pulled the request, change the folder directory
+
+
 volumes:
   mysql_data:
