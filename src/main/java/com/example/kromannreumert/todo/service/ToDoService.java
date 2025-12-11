@@ -119,7 +119,7 @@ public class ToDoService {
 
     public ToDoResponseDto updateAssignees(Long todoId, ToDoAssigneeUpdateRequest request, String name) {
         ToDo todo = toDoRepository.findById(todoId)
-                .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_CLIENT_FAILED,
+                .orElseThrow(() -> new ToDoNotFoundException(LogAction.VIEW_ONE_TODO_FAILED,
                         name,
                         "id" + todoId));
 
@@ -127,7 +127,7 @@ public class ToDoService {
                 .map(id -> userRepository.findById(id.intValue())
                         .orElseThrow(() -> new UserNotFoundException(LogAction.VIEW_ONE_USER_FAILED,
                                 name,
-                                "id" + todoId)))
+                                "id" + id)))
                 .collect(Collectors.toSet());
 
         int oldSize = todo.getUsers() != null ? todo.getUsers().size() : 0;
