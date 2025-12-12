@@ -10,7 +10,7 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -42,10 +42,12 @@ services:
   nginx:
       image: nginx:latest
       ports:
-        - "80:80" # <-- Also need to change this (This is onyl for my test)
+        - "80:80" # <-- Also need to change this (This is only for my test)
       volumes:
-        - /Users/zahaawii/IdeaProjects/ToDo-Frontend:/usr/share/nginx/html # <- If someone else has pulled the request, change the folder directory
-
+        - ./ToDo-Frontend:/var/www/frontend:ro # <- If someone else has pulled the request, change the folder directory
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      depends_on:
+        - backend
 
 volumes:
   mysql_data:
