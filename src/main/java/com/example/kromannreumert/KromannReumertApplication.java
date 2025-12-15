@@ -76,6 +76,10 @@ public class KromannReumertApplication {
                     null,"testJurist","Victor","test@test.dk", passwordEncoder.encode("test"), now, Set.of(jurist)
             ));
 
+            User testJurist2 = userRepo.save(new User(
+                    null,"testJurist2","Ossas","test@test.dk", passwordEncoder.encode("test"), now, Set.of(jurist)
+            ));
+
             Client client1 = clientRepository.save(new Client(null, "Zahaa Enterprise", Set.of(testPartner), 99000L));
             Client client2 = clientRepository.save(new Client(null, "Hannibal Enterprise", Set.of(testPartner), 99001L));
             Client client3 = clientRepository.save(new Client(null, "Victor Enterprise", Set.of(testPartner), 99002L));
@@ -120,6 +124,17 @@ public class KromannReumertApplication {
                     testPartner,
                     LocalDateTime.now()
             ));
+
+            Casee caseMed1Jurist = caseRepository.save(new Casee(
+                    "Tvist – Kontraktsbrud",
+                    client3,
+                    Set.of(testJurist2),
+                    10788L,
+                    testPartner,
+                    LocalDateTime.now()
+            ));
+
+
 
             // TODOS under caseMedJurist
             ToDo todo1 = new ToDo();
