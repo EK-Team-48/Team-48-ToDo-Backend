@@ -23,20 +23,24 @@ services:
     image: "ghcr.io/ek-team-48/team-48-todo-backend/kr-backend:latest"
     ports:
       - "127.0.0.1:8080:8080"
+
+    volumes:
+      - /root/keys:/keys:ro
+
     environment:
       - spring.application.name=mysql
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
       - spring.datasource.url=${DB_URL}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - spring.datasource.username=${DB_USERNAME}
       - spring.datasource.password=${DB_PASSWORD}
+
+      - JWT_PUBLIC_KEY_PATH=/keys/public.key
+      - JWT_PRIVATE_KEY_PATH=/keys/private.pem
+
     depends_on:
       mysql:
         condition: service_healthy
-    healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://127.0.0.1:8080/status/healthz" ]
-      interval: 10s
-      timeout: 5s
-      retries: 18
+
 
   frontend:
       # Hvis du har bygget lokalt: docker build -t kr-frontend:latest .
