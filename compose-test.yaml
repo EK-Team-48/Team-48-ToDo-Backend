@@ -24,18 +24,13 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
-    volumes:
-      - /root/keys:/keys:ro
-
     environment:
+      - SPRING_PROFILES_ACTIVE=test
       - spring.application.name=mysql
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
       - spring.datasource.url=${DB_URL}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - spring.datasource.username=${DB_USERNAME}
       - spring.datasource.password=${DB_PASSWORD}
-
-      - JWT_PUBLIC_KEY_PATH=/keys/public.key
-      - JWT_PRIVATE_KEY_PATH=/keys/private.pem
 
     depends_on:
       mysql:
