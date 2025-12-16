@@ -45,8 +45,9 @@ jobs:
         DB_USERNAME: ${{secrets.DB_USERNAME}}
         DB_URL: jdbc:mysql://mysql:3306/${{ secrets.DB_NAME }}
 
+
       run: |
-          docker compose up -d
+          docker compose -f compose.test.yaml up
           sleep 60
           docker ps -a
           docker compose logs
