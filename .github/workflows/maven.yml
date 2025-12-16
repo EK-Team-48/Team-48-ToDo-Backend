@@ -44,6 +44,7 @@ jobs:
         MYSQL_DATABASE: ${{secrets.DB_NAME}}
         MYSQL_USER: ${{secrets.DB_USERNAME}}
         MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
+        MYSQL_DB_URL: jdbc:mysql://mysql:3306/${{ secrets.DB_NAME }}
 
       run: |
           docker compose up -d
