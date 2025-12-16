@@ -40,12 +40,11 @@ jobs:
 
     - name: Run docker test
       env:
-        MYSQL_ROOT_PASSWORD: ${secrets.DB_PASSWORD}
-        MYSQL_DATABASE: ${secrets.DB_NAME}
-        MYSQL_USER: ${secrets.DB_USERNAME}
-        MYSQL_PASSWORD: ${secrets.DB_PASSWORD}
-        username: ${{ github.actor }}
-        password: ${{ secrets.PAT }}
+        MYSQL_ROOT_PASSWORD: ${{secrets.DB_PASSWORD}}
+        MYSQL_DATABASE: ${{secrets.DB_NAME}}
+        MYSQL_USER: ${{secrets.DB_USERNAME}}
+        MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
+
       run: |
           docker compose up -d
           sleep 60
