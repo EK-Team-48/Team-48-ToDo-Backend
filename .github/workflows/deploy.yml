@@ -3,6 +3,7 @@ name: Test project and then Deploy Ubuntu Server Project
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   ## First we build and test the application if it works. First with Docker and then with maven
@@ -23,15 +24,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-
-#      - name: Run docker test
- #       run: |
-  #        docker compose up -d
-   #       sleep 60
-    #      docker ps -a
-     #     docker logs $(docker ps -aq --filter name=app)
-      #    curl -i http://127.0.0.1:8080/healthz
-       #   docker compose down
 
       - uses: actions/cache@v4
         with:
